@@ -35,7 +35,12 @@ class Camera:
             self.position -= np.array([0, 1, 0, 1]) * self.moving_speed
 
         for event in pg.event.get():
-            if event.type == pg.MOUSEMOTION:
+            if event.type == pg.MOUSEBUTTONDOWN:
+                pg.mouse.set_visible(0)
+                pg.mouse.set_pos(800, 450)
+            if event.type == pg.MOUSEBUTTONUP:
+                pg.mouse.set_visible(1)
+            if event.type == pg.MOUSEMOTION and pg.mouse.get_pressed()[0]:
                 self.angleYaw += (800-pg.mouse.get_pos()[0])*-0.005
                 if self.anglePitch > -1.5 and (450-pg.mouse.get_pos()[1])*-0.005 < 0:
                     self.anglePitch += (450-pg.mouse.get_pos()[1])*-0.005
@@ -45,6 +50,7 @@ class Camera:
 
 
     def camera_matrix(self):
+        print(self.angleYaw)
         rotate = rotate_x(self.anglePitch) @ rotate_y(self.angleYaw)
         self.right = np.array([1, 0, 0, 1]) @ rotate
         self.up = np.array([0, 1, 0, 1]) @ rotate

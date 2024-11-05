@@ -1,3 +1,4 @@
+import numpy as np
 import pygame as pg
 from matrix_functions import *
 from numba import njit
