@@ -1,5 +1,6 @@
 import pygame as pg
 
+from Frustum import Frustum
 from matrix_functions import *
 
 class Camera:
@@ -13,11 +14,13 @@ class Camera:
         self.v_fov = self.h_fov * (render.HEIGHT / render.WIDTH)
         self.near_plane = 0.1
         self.far_plane = 100
-        self.moving_speed = 0.5
+        self.moving_speed = 0.2
         self.rotation_speed = 0.015
 
         self.anglePitch = 0.0
         self.angleYaw = 0.0
+
+        self.frustum = Frustum(self)
 
     def control(self):
         key = pg.key.get_pressed()
@@ -48,9 +51,10 @@ class Camera:
                     self.anglePitch += (450-pg.mouse.get_pos()[1])*-0.005
                 pg.mouse.set_pos(800, 450)
 
+        self.frustum.update_planes()
+
 
     def camera_matrix(self):
-        print(self.angleYaw)
         rotate = rotate_x(self.anglePitch) @ rotate_y(self.angleYaw)
         self.right = np.array([1, 0, 0, 1]) @ rotate
         self.up = np.array([0, 1, 0, 1]) @ rotate
